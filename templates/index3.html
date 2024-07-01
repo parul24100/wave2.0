@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANPR and Face Detection</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            font-family: Arial, sans-serif;
+        }
+        #video-container {
+            display: flex;
+        }
+        video {
+            border: 1px solid black;
+        }
+        #detected-text {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ANPR and Face Detection</h1>
+    <div id="video-container">
+        <img id="video" src="{{ url_for('video_feed') }}">
+        <div id="detected-text">
+            <h2>Detected Text</h2>
+            <ul id="text-list"></ul>
+        </div>
+    </div>
+    <script>
+        function fetchOcrResults() {
+            fetch('/ocr_results')
+                .then(response => response.json())
+                .then(data => {
+                    const textList = document.getElementById('text-list');
+                    textList.innerHTML = '';
+                    data.forEach(text => {
+                        const li = document.createElement('li');
+                        li.textContent = text;
+                        textList.appendChild(li);
+                    });
+                });
+        }
+
+        setInterval(fetchOcrResults, 2000);
+    </script>
+</body>
+</html>
